@@ -99,13 +99,17 @@ Huginn::Application.routes.draw do
   post  "/users/:user_id/webhooks/:agent_id/:secret" => "web_requests#handle_request" # legacy
   post  "/users/:user_id/update_location/:secret" => "web_requests#update_location" # legacy
 
+  match "/users/:user_id/web_requests/:agent_id/:secret" => "web_requests#handle_request_options", via: :options
+
+
+
   devise_for :users,
-             controllers: { 
-               omniauth_callbacks: 'omniauth_callbacks',
-               registrations: 'users/registrations'
-             },
-             sign_out_via: [:post, :delete]
-  
+              controllers: {
+                omniauth_callbacks: 'omniauth_callbacks',
+                registrations: 'users/registrations'
+              },
+                sign_out_via: [:post, :delete]
+
   if Rails.env.development?
     mount LetterOpenerWeb::Engine, at: "/letter_opener"
   end
